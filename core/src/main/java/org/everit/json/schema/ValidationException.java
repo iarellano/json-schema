@@ -1,3 +1,19 @@
+/*
+ * Original work Copyright (C) 2011 Everit Kft. (http://www.everit.org)
+ * Modified work Copyright (c) 2019 Isaias Arellano - isaias.arellano.delgado@gmail.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.everit.json.schema;
 
 import static java.util.Collections.singletonList;
@@ -9,6 +25,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import org.everit.json.schema.i18n.ResourceBundleThreadLocal;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -68,7 +86,7 @@ public class ValidationException extends RuntimeException {
     static ValidationException createWrappingException(Schema rootFailingSchema, List<ValidationException> failures) {
         return new ValidationException(rootFailingSchema,
                 new StringBuilder("#"),
-                getViolationCount(failures) + " schema violations found",
+                String.format(ResourceBundleThreadLocal.get().getString("validations.count"), getViolationCount(failures)),
                 new ArrayList<>(failures),
                 null,
                 rootFailingSchema.getSchemaLocation());
@@ -129,8 +147,8 @@ public class ValidationException extends RuntimeException {
     public ValidationException(Schema violatedSchema, Class<?> expectedType,
             Object actualValue, String keyword) {
         this(violatedSchema, new StringBuilder("#"),
-                "expected type: " + expectedType.getSimpleName() + ", found: "
-                        + (actualValue == null ? "null" : actualValue.getClass().getSimpleName()),
+                String.format(ResourceBundleThreadLocal.get().getString("validations.expected-type"),
+                        expectedType.getSimpleName(),(actualValue == null ? "null" : actualValue.getClass().getSimpleName())),
                 Collections.emptyList(), keyword, null);
     }
 
@@ -152,8 +170,8 @@ public class ValidationException extends RuntimeException {
     public ValidationException(Schema violatedSchema, Class<?> expectedType,
             Object actualValue, String keyword, String schemaLocation) {
         this(violatedSchema, new StringBuilder("#"),
-                "expected type: " + expectedType.getSimpleName() + ", found: "
-                        + (actualValue == null ? "null" : actualValue.getClass().getSimpleName()),
+                String.format(ResourceBundleThreadLocal.get().getString("validations.expected-type"),
+                        expectedType.getSimpleName(),(actualValue == null ? "null" : actualValue.getClass().getSimpleName())),
                 Collections.emptyList(), keyword, schemaLocation);
     }
 

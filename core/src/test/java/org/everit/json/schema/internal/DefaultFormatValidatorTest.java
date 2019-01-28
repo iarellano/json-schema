@@ -1,11 +1,12 @@
 /*
- * Copyright (C) 2011 Everit Kft. (http://www.everit.org)
+ * Original work Copyright (C) 2011 Everit Kft. (http://www.everit.org)
+ * Modified work Copyright (c) 2019 Isaias Arellano - isaias.arellano.delgado@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,9 +17,13 @@
 package org.everit.json.schema.internal;
 
 import org.everit.json.schema.FormatValidator;
+import org.everit.json.schema.i18n.ResourceBundleThreadLocal;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.Locale;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 import static org.everit.json.schema.internal.ValidatorTestSupport.assertFailure;
 import static org.everit.json.schema.internal.ValidatorTestSupport.assertSuccess;
@@ -28,6 +33,15 @@ public class DefaultFormatValidatorTest {
     private static final String THERE_IS_NO_PLACE_LIKE = "127.0.0.1";
 
     private static final String IPV6_ADDR = "2001:db8:85a3:0:0:8a2e:370:7334";
+
+
+    @BeforeClass
+    public static void setI18N() {
+        if (ResourceBundleThreadLocal.get() == null) {
+            Locale locale = new Locale("en", "US");
+            ResourceBundleThreadLocal.set(ResourceBundle.getBundle("MessageBundle", locale));
+        }
+    }
 
     @Test
     public void dateTimeExceedingLimits() {
@@ -321,7 +335,7 @@ public class DefaultFormatValidatorTest {
     public void protocolRelativeURIsCanBeDisabled() {
         assertFailure("//example.com", new URIFormatValidator(false), "[//example.com] is not a valid URI");
     }
-    
+
     //
     //    @Test
     //    public void protocolRelativeUriSuccess() {

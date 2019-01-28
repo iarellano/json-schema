@@ -1,3 +1,19 @@
+/*
+ * Original work Copyright (C) 2011 Everit Kft. (http://www.everit.org)
+ * Modified work Copyright (c) 2019 Isaias Arellano - isaias.arellano.delgado@gmail.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.everit.json.schema;
 
 import static java.lang.String.format;
@@ -8,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.everit.json.schema.i18n.ResourceBundleThreadLocal;
 import org.everit.json.schema.regexp.Regexp;
 import org.json.JSONObject;
 
@@ -39,13 +56,13 @@ class ObjectSchemaValidatingVisitor extends Visitor {
 
     @Override void visitRequiredPropertyName(String requiredPropName) {
         if (!objSubject.has(requiredPropName)) {
-            owner.failure(format("required key [%s] not found", requiredPropName), "required");
+            owner.failure(format(ResourceBundleThreadLocal.get().getString("object.required"), requiredPropName), "required");
         }
     }
 
     @Override void visitPropertyNameSchema(Schema propertyNameSchema) {
         if (propertyNameSchema != null) {
-            String[] names = getNames(objSubject);
+            String[] names = JSONObject.getNames(objSubject);
             if (names == null || names.length == 0) {
                 return;
             }
@@ -60,13 +77,13 @@ class ObjectSchemaValidatingVisitor extends Visitor {
 
     @Override void visitMinProperties(Integer minProperties) {
         if (minProperties != null && objectSize < minProperties.intValue()) {
-            owner.failure(format("minimum size: [%d], found: [%d]", minProperties, objectSize), "minProperties");
+            owner.failure(format(ResourceBundleThreadLocal.get().getString("object.minProperties"), minProperties, objectSize), "minProperties");
         }
     }
 
     @Override void visitMaxProperties(Integer maxProperties) {
         if (maxProperties != null && objectSize > maxProperties.intValue()) {
-            owner.failure(format("maximum size: [%d], found: [%d]", maxProperties, objectSize), "maxProperties");
+            owner.failure(format(ResourceBundleThreadLocal.get().getString("object.maxProperties"), maxProperties, objectSize), "maxProperties");
         }
     }
 
@@ -74,7 +91,7 @@ class ObjectSchemaValidatingVisitor extends Visitor {
         if (objSubject.has(ifPresent)) {
             for (String mustBePresent : allMustBePresent) {
                 if (!objSubject.has(mustBePresent)) {
-                    owner.failure(format("property [%s] is required", mustBePresent), "dependencies");
+                    owner.failure(format(ResourceBundleThreadLocal.get().getString("object.dependencies"), mustBePresent), "dependencies");
                 }
             }
         }
@@ -87,7 +104,7 @@ class ObjectSchemaValidatingVisitor extends Visitor {
                 return;
             }
             for (String additionalProperty : additionalProperties) {
-                owner.failure(format("extraneous key [%s] is not permitted", additionalProperty), "additionalProperties");
+                owner.failure(format(ResourceBundleThreadLocal.get().getString("object.additionalProperties"), additionalProperty), "additionalProperties");
             }
         }
     }

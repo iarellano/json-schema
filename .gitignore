@@ -8,3 +8,8 @@ target
 .pmdruleset.xml
 .idea
 *.iml
+**/.DS_Store
+**/target
+**/tmp
+**/*sh
+**/node_modules

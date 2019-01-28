@@ -1,3 +1,19 @@
+/*
+ * Original work Copyright (C) 2011 Everit Kft. (http://www.everit.org)
+ * Modified work Copyright (c) 2019 Isaias Arellano - isaias.arellano.delgado@gmail.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.everit.json.schema;
 
 import static java.lang.String.format;
@@ -10,6 +26,7 @@ import java.util.Optional;
 import java.util.function.IntFunction;
 import java.util.stream.IntStream;
 
+import org.everit.json.schema.i18n.ResourceBundleThreadLocal;
 import org.json.JSONArray;
 
 class ArraySchemaValidatingVisitor extends Visitor {
@@ -40,13 +57,13 @@ class ArraySchemaValidatingVisitor extends Visitor {
 
     @Override void visitMinItems(Integer minItems) {
         if (minItems != null && subjectLength < minItems) {
-            owner.failure("expected minimum item count: " + minItems + ", found: " + subjectLength, "minItems");
+            owner.failure(format(ResourceBundleThreadLocal.get().getString("array.minItems"), minItems, subjectLength), "minItems");
         }
     }
 
     @Override void visitMaxItems(Integer maxItems) {
         if (maxItems != null && maxItems < subjectLength) {
-            owner.failure("expected maximum item count: " + maxItems + ", found: " + subjectLength, "maxItems");
+            owner.failure(format(ResourceBundleThreadLocal.get().getString("array.maxItems"), maxItems, subjectLength), "maxItems");
         }
     }
 
@@ -59,7 +76,7 @@ class ArraySchemaValidatingVisitor extends Visitor {
             Object item = arraySubject.get(i);
             for (Object contained : uniques) {
                 if (ObjectComparator.deepEquals(contained, item)) {
-                    owner.failure("array items are not unique", "uniqueItems");
+                    owner.failure(ResourceBundleThreadLocal.get().getString("array.uniqueItems"), "uniqueItems");
                     return;
                 }
             }
@@ -88,7 +105,7 @@ class ArraySchemaValidatingVisitor extends Visitor {
         List<Schema> itemSchemas = arraySchema.getItemSchemas();
         int itemSchemaCount = itemSchemas == null ? 0 : itemSchemas.size();
         if (itemSchemas != null && !additionalItems && subjectLength > itemSchemaCount) {
-            owner.failure(format("expected: [%d] array items, found: [%d]", itemSchemaCount, subjectLength), "items");
+            owner.failure(format(ResourceBundleThreadLocal.get().getString("array.additionalItems"), itemSchemaCount, subjectLength), "items");
         }
     }
 
@@ -127,6 +144,6 @@ class ArraySchemaValidatingVisitor extends Visitor {
                 return;
             }
         }
-        owner.failure("expected at least one array item to match 'contains' schema", "contains");
+        owner.failure(ResourceBundleThreadLocal.get().getString("array.contains"), "contains");
     }
 }

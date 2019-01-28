@@ -22,7 +22,7 @@
     <groupId>com.github.iarellano</groupId>
     <artifactId>org.everit.json.schema</artifactId>
     <!--<version>0.0.0-develop</version>-->
-    <version>1.10.0-SNAPSHOT</version>
+    <version>1.10.0</version>
     <packaging>bundle</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -61,7 +61,8 @@
         <connection>scm:git:git://github.com/iarellano/json-schema.git</connection>
         <developerConnection>scm:git:https://github.com/iarellano/json-schema.git</developerConnection>
         <url>https://github.com/iarellano/json-schema</url>
-    </scm>
+      <tag>org.everit.json.schema-1.10.0</tag>
+  </scm>
     <build>
         <plugins>
             <plugin>

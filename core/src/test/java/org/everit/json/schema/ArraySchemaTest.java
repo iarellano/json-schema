@@ -1,11 +1,12 @@
 /*
- * Copyright (C) 2011 Everit Kft. (http://www.everit.org)
+ * Original work Copyright (C) 2011 Everit Kft. (http://www.everit.org)
+ * Modified work Copyright (c) 2019 Isaias Arellano - isaias.arellano.delgado@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,18 +21,31 @@ import static org.everit.json.schema.TestSupport.buildWithLocation;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
 
+import org.everit.json.schema.i18n.ResourceBundleThreadLocal;
 import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONObject;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class ArraySchemaTest {
 
     private static final ResourceLoader loader = ResourceLoader.DEFAULT;
 
     private static final JSONObject ARRAYS = loader.readObj("arraytestcases.json");
+
+    @BeforeClass
+    public static void setI18N() {
+        if (ResourceBundleThreadLocal.get() == null) {
+            Locale locale = new Locale("en", "US");
+            ResourceBundleThreadLocal.set(ResourceBundle.getBundle("MessageBundle", locale));
+        }
+    }
 
     @Test
     public void additionalItemsSchema() {

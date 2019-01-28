@@ -1,3 +1,19 @@
+/*
+ * Original work Copyright (C) 2011 Everit Kft. (http://www.everit.org)
+ * Modified work Copyright (c) 2019 Isaias Arellano - isaias.arellano.delgado@gmail.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.everit.json.schema;
 
 import static java.lang.String.format;
@@ -7,6 +23,8 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.Collection;
 import java.util.List;
+
+import org.everit.json.schema.i18n.ResourceBundleThreadLocal;
 
 import org.json.JSONObject;
 
@@ -33,7 +51,7 @@ public class SchemaException extends RuntimeException {
             System.arraycopy(furtherExpectedTypes, 0, allExpecteds, 1, furtherExpectedTypes.length);
             return buildMessage(pointer, actualTypeDescr, asList(allExpecteds));
         }
-        return format("%s: expected type: %s, found: %s", pointer,
+        return format(ResourceBundleThreadLocal.get().getString("object.wrong-type"), pointer,
                 expectedType.getSimpleName(),
                 actualTypeDescr);
     }
@@ -45,8 +63,8 @@ public class SchemaException extends RuntimeException {
     static String buildMessage(String formattedPointer, String actualTypeDescr, Collection<Class<?>> expectedTypes) {
         String fmtExpectedTypes = expectedTypes.stream()
                 .map(Class::getSimpleName)
-                .collect(joining(" or "));
-        return format("%s: expected type is one of %s, found: %s", formattedPointer,
+                .collect(joining(ResourceBundleThreadLocal.get().getString("object.or-noun")));
+        return format(ResourceBundleThreadLocal.get().getString("object.wrong-type.one-of"), formattedPointer,
                 fmtExpectedTypes,
                 actualTypeDescr);
     }
@@ -90,14 +108,14 @@ public class SchemaException extends RuntimeException {
 
     @Deprecated
     public SchemaException(String key, Class<?> expectedType, Object actualValue) {
-        this(format("key %s : expected type: %s , found : %s", key, expectedType
+        this(format(ResourceBundleThreadLocal.get().getString("object.wrong-type.key"), key, expectedType
                 .getSimpleName(), typeOfValue(actualValue)));
     }
 
     @Deprecated
     public SchemaException(String key, List<Class<?>> expectedTypes,
             final Object actualValue) {
-        this(format("key %s: expected type is one of %s, found: %s",
+        this(format(ResourceBundleThreadLocal.get().getString("object.wrong-type.key.one-of"),
                 key, joinClassNames(expectedTypes), typeOfValue(actualValue)));
     }
 

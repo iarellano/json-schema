@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.everit.json.schema.i18n.ResourceBundleThreadLocal;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +22,8 @@ PS. it is fun to port my own contribution to org.json into everit-org/json-schem
  */
 
 /*
-Copyright (c) 2002 JSON.org
+Original work Copyright (c) 2002 JSON.org
+Modified work Copyright (c) 2019 Isaias Arellano - isaias.arellano.delgado@gmail.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -248,9 +250,7 @@ public class JSONPointer {
             } else if (current instanceof JSONArray) {
                 current = readByIndexToken(current, token);
             } else {
-                throw new JSONPointerException(format(
-                        "value [%s] is not an array or object therefore its key %s cannot be resolved", current,
-                        token));
+                throw new JSONPointerException(format(ResourceBundleThreadLocal.get().getString("json.query-form"), current, token));
             }
         }
         return current;
@@ -272,7 +272,7 @@ public class JSONPointer {
             int index = Integer.parseInt(indexToken);
             JSONArray currentArr = (JSONArray) current;
             if (index >= currentArr.length()) {
-                throw new JSONPointerException(format("index %s is out of bounds - the array has %d elements", indexToken,
+                throw new JSONPointerException(format(ResourceBundleThreadLocal.get().getString("json.read-by-index-token"), indexToken,
                         Integer.valueOf(currentArr.length())));
             }
             try {
